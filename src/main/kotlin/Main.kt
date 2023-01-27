@@ -18,9 +18,6 @@ import dev.inmo.tgbotapi.utils.PreviewFeature
 import dev.inmo.tgbotapi.utils.extensions.escapeMarkdownV2Common
 import kotlinx.coroutines.*
 
-/**
- * The main purpose of this bot is just to answer "Oh, hi, " and add user mention here
- */
 @OptIn(PreviewFeature::class)
 suspend fun main() {
     //val botToken = args.first()
@@ -28,15 +25,14 @@ suspend fun main() {
     telegramBotWithBehaviourAndLongPolling(System.getenv("TOKEN"), CoroutineScope(Dispatchers.IO)) {
         onContentMessage { message ->
             val chat = message.chat
+            val messageText = message.text ?: ""
 
-            if (message.text?.contains("Arnold", ignoreCase = true) ?: false) {
-                send(chat, "I am making things up again", MarkdownV2)
-                return@onContentMessage
+            val sentence = when {
+                messageText.contains("Arnold", ignoreCase = true) -> "I am making things up again"
+                messageText.contains("hello", ignoreCase = true) -> "Hello\\, my name is Elder Cunningham"
+                else -> " "
             }
-            if (message.text?.contains("hello", ignoreCase = true) ?: false) {
-                send(chat, "hello my name is elder cunningham", MarkdownV2)
-                return@onContentMessage
-            }
+            send(chat, sentence, MarkdownV2)
         }
         allUpdatesFlow.subscribeSafelyWithoutExceptions(this) { println(it) }
     }.second.join()
