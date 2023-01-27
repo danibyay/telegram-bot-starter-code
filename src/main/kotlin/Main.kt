@@ -30,8 +30,11 @@ suspend fun main() {
             val sentence = when {
                 messageText.contains("Arnold", ignoreCase = true) -> "I am making things up again"
                 messageText.contains("hello", ignoreCase = true) -> "Hello\\, my name is Elder Cunningham"
-                else -> " "
+                else -> ""
             }
+
+            if (sentence.isEmpty() || sentence.isBlank()) return@onContentMessage
+
             send(chat, sentence, MarkdownV2)
         }
         allUpdatesFlow.subscribeSafelyWithoutExceptions(this) { println(it) }
